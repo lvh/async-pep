@@ -45,6 +45,12 @@ libraries causes a lot of duplicated effort for third party library
 developers. A sufficiently powerful abstraction could mean that
 asynchronous code gets written once, but used everywhere.
 
+An eventual added goal would be for standard library implementations
+of wire and network protocols to evolve towards being real protocol
+implementations, as opposed to standalone libraries that do everything
+including calling ``recv()`` blockingly. This means they could be
+easily reused for both synchronous and asynchronous code.
+
 .. _Twisted: http://www.twistedmatrix.com/
 .. _gevent: http://www.gevent.org/
 
