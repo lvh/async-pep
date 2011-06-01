@@ -41,15 +41,15 @@ class Transport(FlowControl):
         """
         Write some data into the transport.
 
-        The data must be a bytestring.
+        The data must be buffer of bytes.
         """
 
     @abstractmethod
-    def write_sequence(self, sequence_of_strings):
+    def write_sequence(self, sequence):
         """
         Write a sequence of data.
 
-        Each piece of data must be a bytestring.
+        The sequence must be a sequence of buffers of bytes.
         """
 
     @abstractmethod
