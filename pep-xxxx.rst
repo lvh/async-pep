@@ -79,7 +79,7 @@ Producers
 References
 ==========
 
-.. _writev_: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
+.. _writev: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
 .. _write: http://pubs.opengroup.org/onlinepubs/009695399/functions/write.html
 .. _send: http://pubs.opengroup.org/onlinepubs/009695399/functions/send.html
 
