@@ -60,6 +60,16 @@ Protocols
 Transports
 ==========
 
+A transport is responsible for getting bytes from and to the other side of a connection. It is the interface to something like a socket, a (named) pipe, a serial port... A transport encapsulates all of the specific implementation details to it.
+
+Transports talk to two things: that other side of the connection one one hand, and a protocol on the other. It's a bridge between that specific underlying transfer mechanism and the protocol. It's job can be described as allowing the protocol to just send and receive bytes, taking care of all of the magic that needs to happen for those bytes to be eventually sent across the wire.
+
+The primary feature of a transport is sending bytes to a protocol and receiving bytes from the underlying protocol. Writing to the transport is done using the ``write`` and ``write_sequence`` methods. The latter method is a performance optimization, to allow software to take advantage of specific capabilities in some transport mechanisms. Specifically, this allows transports to use writev_ instead of write_ or send_, also known as scatter/gather IO.
+
+A transport can be paused and resumed. This will cause it to buffer data coming from protocols, and stop sending received data to the protocol.
+
+A transport can also be closed, half-closed and aborted. A closed transport will finish writing all of the data queued in it to the underlying mechanism. A half-closed transport can't be written to anymore, but will still accept incoming data.
+
 Consumers
 =========
 
@@ -68,6 +78,10 @@ Producers
 
 References
 ==========
+
+.. _writev_: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
+.. _write: http://pubs.opengroup.org/onlinepubs/009695399/functions/write.html
+.. _send: http://pubs.opengroup.org/onlinepubs/009695399/functions/send.html
 
 Copyright
 =========
