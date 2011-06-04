@@ -16,7 +16,7 @@ class FlowControl(metaclass=abc.ABCMeta):
         Resume sending data sending data.
         """
 
-class Protocol(FlowControl):
+class Protocol(metaclass=abc.ABCMeta):
     @abstractmethod
     def connected(self, transport):
         """
