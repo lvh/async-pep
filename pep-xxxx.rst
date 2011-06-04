@@ -32,7 +32,13 @@ few options:
 Unfortunately, each of these options has its downsides, which this PEP
 tries to address.
 
-XXX Find a way to describe how bad asyncore is in 1 or 2 paragraphs
+Despite having been part of the Python standard library for a long time,
+the asyncore module suffers from fundamental flaws following from
+an inflexible API that does not stand up to the expectations towards
+a modern asynchronous networking module.
+Moreover, its approach is too simplistic to provide developers with all
+the tools they need in order to fully exploit the potential of asynchronous
+networking.
 
 The most popular solution right now used in production involves the
 use of third party libraries. These often provide satisfactory
