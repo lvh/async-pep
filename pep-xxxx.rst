@@ -54,9 +54,6 @@ easily reused for both synchronous and asynchronous code.
 .. _Twisted: http://www.twistedmatrix.com/
 .. _gevent: http://www.gevent.org/
 
-Protocols
-=========
-
 Transports
 ==========
 
@@ -69,6 +66,18 @@ The primary feature of a transport is sending bytes to a protocol and receiving 
 A transport can be paused and resumed. This will cause it to buffer data coming from protocols, and stop sending received data to the protocol.
 
 A transport can also be closed, half-closed and aborted. A closed transport will finish writing all of the data queued in it to the underlying mechanism. A half-closed transport can't be written to anymore, but will still accept incoming data.
+
+Protocols
+=========
+
+Why separate protocols and transports?
+======================================
+
+This separation between protocol and transport often confuses people who first come across it. In fact, the standard library itself does not make this distinction in many cases, particularly not in the API it provides to users.
+
+It is nonetheless a very useful distinction. In the worst case, it simplifies the implementation by clear separation of concerns. However, it often serves the far more useful purpose of being able to reuse protocols across different transports.
+
+Consider an RPC protocol. It's quite reasonable for that protocol to be reused across pipes, sockets, and perhaps higher-level protocols such as HTTP or messaging protocols like AMQP or ZeroMQ. With this distinction, this requires literally no extra work.
 
 Consumers
 =========
