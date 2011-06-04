@@ -98,6 +98,12 @@ still accept incoming data.
 Protocols
 =========
 
+Protocols are probably more familiar to new users. The terminology is consistent with what you would expect from something called a protocol: the protocols most people think of first, like HTTP, IRC, SMTP... are all examples of something that would be implemented in a protocol.
+
+The shortest useful definition of a protocol is a (usually two-way) bridge between the transport and the rest of the application logic. A protocol will receive bytes from a transport and translates that information into some behavior, typically resulting in some method calls on an object. Similarly, application logic calls some methods on the protocol, which the protocol translates into bytes and communicates to the transport.
+
+One of the simplest protocols is a line-based protocol, where data is delimited by ``\r\n``. The protocol will receive bytes from the transport, and buffer them until a line is complete. Once that's done, it will call ``line_received``. Ideally that'd be done using a callable or even a completely separate object composed by the protocol, but it could equally well be implemented by subclassing (as is the case with Twisted's ``LineReceiver``). In the other direction, the protocol might have a ``write_line`` method, which adds the required ``\r\n`` and passes the new bytes buffer on to the transport.
+
 Why separate protocols and transports?
 ======================================
 
