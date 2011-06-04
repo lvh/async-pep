@@ -77,7 +77,9 @@ This separation between protocol and transport often confuses people who first c
 
 It is nonetheless a very useful distinction. In the worst case, it simplifies the implementation by clear separation of concerns. However, it often serves the far more useful purpose of being able to reuse protocols across different transports.
 
-Consider an RPC protocol. It's quite reasonable for that protocol to be reused across pipes, sockets, and perhaps higher-level protocols such as HTTP or messaging protocols like AMQP or ZeroMQ. With this distinction, this requires literally no extra work.
+Consider a simple JSON-based RPC protocol. The same bytes may be shuttled over pipes and sockets, across TCP and UDP. To help with this, we separate the Protocol out from the Transport: the Protocol is focused entirely on dealing with the bytes and bits.
+
+HTTP, even as a protocol, is often used as a generic transport due to AJAX as well as its elevated status stemming from the World Wide Web: firewalls rarely block port 80. Recognizing this, we can build an HTTP transport service, which uses the already-existing HTTP protocol implementation, while it can use any of the common already-existing transports underneath itself.
 
 Consumers
 =========
