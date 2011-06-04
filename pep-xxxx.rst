@@ -34,7 +34,7 @@ tries to address.
 
 Despite having been part of the Python standard library for a long time,
 the asyncore module suffers from fundamental flaws following from
-an inflexible API that does not stand up to the expectations towards
+an inflexible API that does not stand up to the expectations of
 a modern asynchronous networking module.
 Moreover, its approach is too simplistic to provide developers with all
 the tools they need in order to fully exploit the potential of asynchronous
