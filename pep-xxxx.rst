@@ -79,7 +79,7 @@ It is nonetheless a very useful distinction. In the worst case, it simplifies th
 
 Consider a simple RPC protocol. The same bytes may be transferred across many different transports, for example pipes or sockets. To help with this, we separate the protocol out from the transport. The protocol just reads and writes bytes, and doesn't really care what mechanism is used to eventually transfer those bytes.
 
-This also allows for protocols to be stacked or nested easily, allowing for even more code reuse. A common example of this is JSON-RPC: according to the specification, it can be used across both sockets and HTTP. In practice, it tends to be primarily encapsulated inside HTTP. The protocol-transport abstraction allows us to build an HTTP transport service, which uses the already-existing HTTP protocol implementation, while it can use any of the existing common transports. For JSONRPC, that might get you a stack somewhat like this:
+This also allows for protocols to be stacked or nested easily, allowing for even more code reuse. A common example of this is JSON-RPC: according to the specification, it can be used across both sockets and HTTP. In practice, it tends to be primarily encapsulated in HTTP. The protocol-transport abstraction allows us to build a stack of protocols and transports that allow you to use HTTP as if it were a transport. For JSONRPC, that might get you a stack somewhat like this:
 
 1. TCP socket transport
 2. HTTP protocol
