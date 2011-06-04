@@ -77,9 +77,15 @@ This separation between protocol and transport often confuses people who first c
 
 It is nonetheless a very useful distinction. In the worst case, it simplifies the implementation by clear separation of concerns. However, it often serves the far more useful purpose of being able to reuse protocols across different transports.
 
-Consider a simple JSON-based RPC protocol. The same bytes may be shuttled over pipes and sockets, across TCP and UDP. To help with this, we separate the Protocol out from the Transport: the Protocol is focused entirely on dealing with the bytes and bits.
+Consider a simple RPC protocol. The same bytes may be transferred across many different transports, for example pipes or sockets. To help with this, we separate the protocol out from the transport. The protocol just reads and writes bytes, and doesn't really care what mechanism is used to eventually transfer those bytes.
 
-HTTP, even as a protocol, is often used as a generic transport due to AJAX as well as its elevated status stemming from the World Wide Web: firewalls rarely block port 80. Recognizing this, we can build an HTTP transport service, which uses the already-existing HTTP protocol implementation, while it can use any of the common already-existing transports underneath itself.
+This also allows for protocols to be stacked or nested easily, allowing for even more code reuse. A common example of this is JSON-RPC: according to the specification, it can be used across both sockets and HTTP. In practice, it tends to be primarily encapsulated inside HTTP. The protocol-transport abstraction allows us to build an HTTP transport service, which uses the already-existing HTTP protocol implementation, while it can use any of the existing common transports. For JSONRPC, that might get you a stack somewhat like this:
+
+1. TCP socket transport
+2. HTTP protocol
+3. HTTP-based transport (for which the above HTTP protocol is the underlying mechanism for transferring bytes)
+4. JSON-RPC protocol
+5. Application code
 
 Consumers
 =========
