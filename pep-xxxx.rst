@@ -59,7 +59,7 @@ Transports
 
 A transport is responsible for getting bytes from and to the other side of a connection. It is the interface to something like a socket, a (named) pipe, a serial port... A transport encapsulates all of the specific implementation details to it.
 
-Transports talk to two things: that other side of the connection one one hand, and a protocol on the other. It's a bridge between that specific underlying transfer mechanism and the protocol. It's job can be described as allowing the protocol to just send and receive bytes, taking care of all of the magic that needs to happen for those bytes to be eventually sent across the wire.
+Transports talk to two things: that other side of the connection one one hand, and a protocol on the other. It's a bridge between that specific underlying transfer mechanism and the protocol. Its job can be described as allowing the protocol to just send and receive bytes, taking care of all of the magic that needs to happen for those bytes to be eventually sent across the wire.
 
 The primary feature of a transport is sending bytes to a protocol and receiving bytes from the underlying protocol. Writing to the transport is done using the ``write`` and ``write_sequence`` methods. The latter method is a performance optimization, to allow software to take advantage of specific capabilities in some transport mechanisms. Specifically, this allows transports to use writev_ instead of write_ or send_, also known as scatter/gather IO.
 
