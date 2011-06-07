@@ -98,11 +98,38 @@ still accept incoming data.
 Protocols
 =========
 
-Protocols are probably more familiar to new users. The terminology is consistent with what you would expect from something called a protocol: the protocols most people think of first, like HTTP, IRC, SMTP... are all examples of something that would be implemented in a protocol.
+Protocols are probably more familiar to new users. The terminology is
+consistent with what you would expect from something called a
+protocol: the protocols most people think of first, like HTTP, IRC,
+SMTP... are all examples of something that would be implemented in a
+protocol.
 
-The shortest useful definition of a protocol is a (usually two-way) bridge between the transport and the rest of the application logic. A protocol will receive bytes from a transport and translates that information into some behavior, typically resulting in some method calls on an object. Similarly, application logic calls some methods on the protocol, which the protocol translates into bytes and communicates to the transport.
+The shortest useful definition of a protocol is a (usually two-way)
+bridge between the transport and the rest of the application logic. A
+protocol will receive bytes from a transport and translates that
+information into some behavior, typically resulting in some method
+calls on an object. Similarly, application logic calls some methods on
+the protocol, which the protocol translates into bytes and
+communicates to the transport.
 
-One of the simplest protocols is a line-based protocol, where data is delimited by ``\r\n``. The protocol will receive bytes from the transport, and buffer them until a line is complete. Once that's done, it will call ``line_received``. Ideally that'd be done using a callable or even a completely separate object composed by the protocol, but it could equally well be implemented by subclassing (as is the case with Twisted's ``LineReceiver``). In the other direction, the protocol might have a ``write_line`` method, which adds the required ``\r\n`` and passes the new bytes buffer on to the transport.
+One of the simplest protocols is a line-based protocol, where data is
+delimited by ``\r\n``. The protocol will receive bytes from the
+transport, and buffer them until there is at least one complete
+line. Once that's done, it will pass this line along to some
+object. Ideally that would be accomplished using a callable or even a
+completely separate object composed by the protocol, but it could also
+be implemented by subclassing (as is the case with Twisted's
+``LineReceiver``). For the other direction, the protocol could have a
+``write_line`` method, which adds the required ``\r\n`` and passes the
+new bytes buffer on to the transport.
+
+This PEP suggests a generalized ``LineReceiver`` called
+``ChunkProtocol``, where a "chunk" is a message in a stream, delimited
+by the specified delimiter. Instances take a delimiter and a callable
+that will be called with a chunk of data once it's received (as
+opposed to Twisted's subclassing behavior). ``ChunkProtocol`` also has
+a ``write_chunk`` method analogous to the ``write_line`` method
+described above.
 
 Why separate protocols and transports?
 ======================================
