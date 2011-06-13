@@ -167,8 +167,24 @@ transport. For JSONRPC, that might get you a stack somewhat like this:
 Consumers
 =========
 
+Consumers consume bytes produced by producers. Together with
+producers, they make flow control possible.
+
 Producers
 =========
+
+Where consumers consume bytes, producers produce them.
+
+Although producers can be told to stop producing entirely, the two
+most interesting methods they have are ``pause`` and ``resume``. These
+are usually called by the consumer, to signify wether it is ready to
+process ("consume") more data or not. Consumers and producers
+cooperate to make flow control possible.
+
+Producers are modelled after the IPushProducer_ interface found in
+Twisted. Although there is an IPullProducer_ as well, it is on the
+whole far less interesting and therefore probably out of the scope of
+this PEP.
 
 References
 ==========
@@ -176,6 +192,9 @@ References
 .. _writev: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
 .. _write: http://pubs.opengroup.org/onlinepubs/009695399/functions/write.html
 .. _send: http://pubs.opengroup.org/onlinepubs/009695399/functions/send.html
+.. _IPushProducer: http://twistedmatrix.com/documents/current/api/twisted.internet.interfaces.IPushProducer.html
+.. _IPullProducer: http://twistedmatrix.com/documents/current/api/twisted.internet.interfaces.IPullProducer.html
+
 
 Copyright
 =========
