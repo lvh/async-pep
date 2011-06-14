@@ -170,6 +170,8 @@ Consumers
 Consumers consume bytes produced by producers. Together with
 producers, they make flow control possible.
 
+Consumers primarily play an active role in flow control.
+
 Producers
 =========
 
