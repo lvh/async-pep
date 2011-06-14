@@ -8,6 +8,16 @@ Introduction
 In order to convince people to contribute, I have designed a
 screencast to show people that it's easier than they think.
 
+Link
+====
+
+The screencast is `available on Youtube`_. Unfortunately I'm really
+incompetent and I used my laptop's internal microphone, so there's a
+lot of noise and cracks. Perhaps I should sucker someone else into
+making my screencast for me...
+
+.. _`available on Youtube`: http://www.youtube.com/watch?v=34qiivr8xRs
+
 Transcript
 ==========
 
