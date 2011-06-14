@@ -15,14 +15,14 @@ Hi! My name is lvh and I've been suckered into writing a PEP.
 
 I'm not going to get out from under it anymore, but I'm going to try
 to turn it into the world's least plausible Ponzi scheme. Basically,
-that means I plan to sucker some of you into helping me write it, and
-hopefully some of you will do unto others what has been done unto you.
+that means I plan to sucker you into helping me write it, and then,
+hopefully, some of you will do unto others what has been done unto
+you.
 
 I say "world's least plausible" because Ponzi schemes are supposed to
 promise you massive riches, and all I promise you is that it won't
 hurt very much. I'm going to try and show you just how easy it is to
-contribute. This is not even something I'm taking credit for -- it's
-just a Github feature.
+contribute.
 
 Let's start by intentionally saying something stupid in the PEP.
 
@@ -62,5 +62,8 @@ of it.
 
 In short, contribution to the async PEP is easy and fun! Well, okay,
 it's not -- but it's probably easier than you may have thought it was.
+
+So please: watch the project on Github, contribute to it, submit
+tickets to the issue tracker... Any and all input is appreciated.
 
 Thanks in advance!
