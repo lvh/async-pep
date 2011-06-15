@@ -60,8 +60,11 @@ easily reused for both synchronous and asynchronous code.
 .. _Twisted: http://www.twistedmatrix.com/
 .. _gevent: http://www.gevent.org/
 
+Communication abstractions
+==========================
+
 Transports
-==========
+----------
 
 A transport is responsible for getting bytes from and to the other
 side of a connection. It is the interface to something like a socket,
@@ -96,7 +99,7 @@ first. A half-closed transport can't be written to anymore, but will
 still accept incoming data.
 
 Protocols
-=========
+---------
 
 Protocols are probably more familiar to new users. The terminology is
 consistent with what you would expect from something called a
@@ -132,7 +135,7 @@ a ``write_chunk`` method analogous to the ``write_line`` method
 described above.
 
 Why separate protocols and transports?
-======================================
+--------------------------------------
 
 This separation between protocol and transport often confuses people
 who first come across it. In fact, the standard library itself does
@@ -164,8 +167,11 @@ transport. For JSONRPC, that might get you a stack somewhat like this:
 4. JSON-RPC protocol
 5. Application code
 
+Flow control
+============
+
 Consumers
-=========
+---------
 
 Consumers consume bytes produced by producers. Together with
 producers, they make flow control possible.
@@ -173,7 +179,7 @@ producers, they make flow control possible.
 Consumers primarily play an passive role in flow control.
 
 Producers
-=========
+---------
 
 Where consumers consume bytes, producers produce them.
 
@@ -187,6 +193,11 @@ most interesting methods they have are ``pause`` and ``resume``. These
 are usually called by the consumer, to signify wether it is ready to
 process ("consume") more data or not. Consumers and producers
 cooperate to make flow control possible.
+
+API alternatives
+----------------
+
+<Describe generators as an alternative API>
 
 References
 ==========
