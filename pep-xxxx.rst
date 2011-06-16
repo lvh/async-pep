@@ -176,7 +176,7 @@ Consumers
 Consumers consume bytes produced by producers. Together with
 producers, they make flow control possible.
 
-Consumers primarily play an passive role in flow control.
+Consumers primarily play a passive role in flow control.
 
 Producers
 ---------
