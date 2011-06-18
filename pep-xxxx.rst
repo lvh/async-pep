@@ -227,10 +227,10 @@ with the case of no new data being available.
 
 This latter edge case is particularly problematic. It needs to be
 taken care of, since the entire operation is not allowed to
-block. However, since generators can not raise an exception visible to
-their callers without losing their own state, signaling a lack of data
-would have to be done using a sentinel value, instead of being done
-using th exception mechanism.
+block. However, generators can not raise an exception on iteration
+without terminating, thereby losing the state of the generator. As a
+result, signaling a lack of available data would have to be done using
+a sentinel value, instead of being done using th exception mechanism.
 
 Last but not least, nobody produced actually working code
 demonstrating how they could be used.
