@@ -213,10 +213,47 @@ producers may require more complex preconditions or behavior when a
 consumer is registered. End-users are not supposed to call this method
 directly.
 
-API alternatives
-----------------
+===========================
+Considered API alternatives
+===========================
 
-<Describe generators as an alternative API>
+Generators as producers
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Generators have been suggested as way to implement producers. However,
+there appear to be a few problems with this.
+
+First of all, there is a conceptual problem. A generator, in a sense,
+is "passive". It needs to be told, through a method call, to take
+action. A producer is "active": it initiates those method calls. A
+real producer has a symmetric relationship with it's consumer. In the
+case of a generator-turned-producer, only the consumer would have a
+reference, and the producer is blissfully unaware of the consumer's
+existence.
+
+This conceptual problem translates into a few technical issues as
+well. After a successful ``write`` method call on its consumer, a
+(push) producer is free to take action once more. In the case of a
+generator, it would need to be told, either by asking for the next
+object through the iteration protocol (a process which could block
+indefinitely), or perhaps by throwing some kind of signal exception
+into it.
+
+This signaling setup may provide a technically feasible solution, but
+it is still unsatisfactory. For one, this introduces unwarranted
+complexity in the consumer, which now not only needs to understand how
+to receive and process data, but also how to ask for new data and deal
+with the case of no new data being available.
+
+This latter edge case is particularly problematic. It needs to be
+taken care of, since the entire operation is not allowed to
+block. However, generators can not raise an exception on iteration
+without terminating, thereby losing the state of the generator. As a
+result, signaling a lack of available data would have to be done using
+a sentinel value, instead of being done using th exception mechanism.
+
+Last but not least, nobody produced actually working code
+demonstrating how they could be used.
 
 References
 ==========
