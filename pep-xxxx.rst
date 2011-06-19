@@ -176,7 +176,18 @@ Consumers
 Consumers consume bytes produced by producers. Together with
 producers, they make flow control possible.
 
-Consumers primarily play a passive role in flow control.
+Consumers primarily play a passive role in flow control. They get
+called whenever a producer has some data available. They then process
+that data, and typically yield control back to the producer.
+
+Consumers typically implement buffers of some sort. They make flow
+control possible by telling their producer about the current status of
+those buffers. A consumer can instruct a producer to stop producing
+entirely, stop producing temporarily, or resume producing if it has
+been told to pause previously.
+
+Producers are registered to the consumer using the ``register``
+method.
 
 Producers
 ---------
@@ -193,6 +204,14 @@ most interesting methods they have are ``pause`` and ``resume``. These
 are usually called by the consumer, to signify wether it is ready to
 process ("consume") more data or not. Consumers and producers
 cooperate to make flow control possible.
+
+In addition to the Twisted IPushProducer_ interface, producers have a
+``half_register`` method which is called with the consumer when the
+consumer tries to register that producer. In most cases, this will
+just be a case of setting ``self.consumer = consumer``, but some
+producers may require more complex preconditions or behavior when a
+consumer is registered. End-users are not supposed to call this method
+directly.
 
 API alternatives
 ----------------
