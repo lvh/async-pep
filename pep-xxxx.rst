@@ -156,10 +156,11 @@ mechanism is used to eventually transfer those bytes.
 This also allows for protocols to be stacked or nested easily,
 allowing for even more code reuse. A common example of this is
 JSON-RPC: according to the specification, it can be used across both
-sockets and HTTP. In practice, it tends to be primarily encapsulated
-in HTTP. The protocol-transport abstraction allows us to build a stack
-of protocols and transports that allow you to use HTTP as if it were a
-transport. For JSONRPC, that might get you a stack somewhat like this:
+sockets and HTTP[#jsonrpc]_ . In practice, it tends to be primarily
+encapsulated in HTTP. The protocol-transport abstraction allows us to 
+build a stack of protocols and transports that allow you to use HTTP 
+as if it were a transport. For JSONRPC, that might get you a stack 
+somewhat like this:
 
 1. TCP socket transport
 2. HTTP protocol
@@ -257,6 +258,9 @@ demonstrating how they could be used.
 
 References
 ==========
+
+.. [#jsonrpc] Sections `2.1 <http://json-rpc.org/wiki/specification#a2.1JSON-RPCoverstreamconnections>`_ and
+              `2.2 <http://json-rpc.org/wiki/specification#a2.2JSON-RPCoverHTTP>`_ .
 
 .. _writev: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
 .. _write: http://pubs.opengroup.org/onlinepubs/009695399/functions/write.html
