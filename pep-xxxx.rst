@@ -194,14 +194,14 @@ Producers
 
 Where consumers consume bytes, producers produce them.
 
-Producers are modelled after the IPushProducer_ interface found in
+Producers are modeled after the IPushProducer_ interface found in
 Twisted. Although there is an IPullProducer_ as well, it is on the
 whole far less interesting and therefore probably out of the scope of
 this PEP.
 
 Although producers can be told to stop producing entirely, the two
 most interesting methods they have are ``pause`` and ``resume``. These
-are usually called by the consumer, to signify wether it is ready to
+are usually called by the consumer, to signify whether it is ready to
 process ("consume") more data or not. Consumers and producers
 cooperate to make flow control possible.
 
