@@ -36,6 +36,7 @@ Despite having been part of the Python standard library for a long time,
 the asyncore module suffers from fundamental flaws following from
 an inflexible API that does not stand up to the expectations of
 a modern asynchronous networking module.
+
 Moreover, its approach is too simplistic to provide developers with all
 the tools they need in order to fully exploit the potential of asynchronous
 networking.
@@ -71,7 +72,7 @@ side of a connection. It is the interface to something like a socket,
 a (named) pipe, a serial port... A transport encapsulates all of the
 specific implementation details to it.
 
-Transports talk to two things: that other side of the connection one
+Transports talk to two things: the other side of the connection on
 one hand, and a protocol on the other. It's a bridge between that
 specific underlying transfer mechanism and the protocol. Its job can
 be described as allowing the protocol to just send and receive bytes,
@@ -118,7 +119,7 @@ communicates to the transport.
 
 One of the simplest protocols is a line-based protocol, where data is
 delimited by ``\r\n``. The protocol will receive bytes from the
-transport, and buffer them until there is at least one complete
+transport and buffer them until there is at least one complete
 line. Once that's done, it will pass this line along to some
 object. Ideally that would be accomplished using a callable or even a
 completely separate object composed by the protocol, but it could also
@@ -158,9 +159,9 @@ This also allows for protocols to be stacked or nested easily,
 allowing for even more code reuse. A common example of this is
 JSON-RPC: according to the specification, it can be used across both
 sockets and HTTP[#jsonrpc]_ . In practice, it tends to be primarily
-encapsulated in HTTP. The protocol-transport abstraction allows us to 
-build a stack of protocols and transports that allow you to use HTTP 
-as if it were a transport. For JSONRPC, that might get you a stack 
+encapsulated in HTTP. The protocol-transport abstraction allows us to
+build a stack of protocols and transports that allow you to use HTTP
+as if it were a transport. For JSON-RPC, that might get you a stack
 somewhat like this:
 
 1. TCP socket transport
