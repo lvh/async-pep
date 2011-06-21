@@ -94,7 +94,7 @@ A transport can also be closed, half-closed and aborted. A closed
 transport will finish writing all of the data queued in it to the
 underlying mechanism, and will then stop reading or writing
 data. Aborting a transport stops it, queued data will be not sent and
-the connection will be close. Further writes will result in exceptions
+the connection will be closed. Further writes will result in exceptions
 being thrown. A half-closed transport may not be written to anymore,
 but will still accept incoming data.
 
