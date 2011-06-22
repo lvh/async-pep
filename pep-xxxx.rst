@@ -73,10 +73,10 @@ a (named) pipe, a serial port... A transport encapsulates all of the
 specific implementation details to it.
 
 Transports talk to two things: the other side of the connection on
-one hand, and a protocol on the other. It's a bridge between that
+one hand, and a protocol on the other. It's a bridge between the
 specific underlying transfer mechanism and the protocol. Its job can
 be described as allowing the protocol to just send and receive bytes,
-taking care of all of the magic that needs to happen for those bytes
+taking care of all of the magic that needs to happen to those bytes
 to be eventually sent across the wire.
 
 The primary feature of a transport is sending bytes to a protocol and
@@ -88,17 +88,18 @@ mechanisms. Specifically, this allows transports to use writev_
 instead of write_ or send_, also known as scatter/gather IO.
 
 A transport can be paused and resumed. This will cause it to buffer
-data coming from protocols, and stop sending received data to the
+data coming from protocols and stop sending received data to the
 protocol.
 
 A transport can also be closed, half-closed and aborted. A closed
 transport will finish writing all of the data queued in it to the
 underlying mechanism, and will then stop reading or writing
 data. Aborting a transport stops it, closing the connection without
-sending any data still queued.
-Further writes will result in exceptions
-being thrown. A half-closed transport may not be written to anymore,
-but will still accept incoming data.
+sending any data that is still queued.
+
+Further writes will result in exceptions being thrown. A half-closed
+transport may not be written to anymore, but will still accept
+incoming data.
 
 Protocols
 ---------
