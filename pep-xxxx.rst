@@ -67,10 +67,15 @@ Communication abstractions
 Transports
 ----------
 
-A transport is responsible for getting bytes from and to the other
-side of a connection. It is the interface to something like a socket,
-a (named) pipe, a serial port... A transport encapsulates all of the
-specific implementation details to it.
+Transports provide a uniform API for reading bytes from and writing
+bytes to different kinds of connections.  Transports in this PEP are
+always ordered, reliable, bidirectional, stream-oriented two-endpoint
+connections.  This might be a TCP socket, an SSL connection, a pipe
+(named or otherwise), a serial port... It may abstract a file descriptor
+on POSIX platforms or a Handle on Windows or some other data structure
+appropriate to a particular platform.  It encapsulates all of the
+particular implementation details of using that platform data structure
+and presents a uniform interface for application developers.
 
 Transports talk to two things: the other side of the connection on
 one hand, and a protocol on the other. It's a bridge between the
