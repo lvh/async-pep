@@ -92,9 +92,11 @@ advantage of specific capabilities in some transport
 mechanisms. Specifically, this allows transports to use writev_
 instead of write_ or send_, also known as scatter/gather IO.
 
-A transport can be paused and resumed. This will cause it to buffer
-data coming from protocols and stop sending received data to the
-protocol.
+A transport can be paused and resumed. A paused transport buffers all
+input and output it gets, rather than sending them to their proper
+places. When resumed, it will flush the buffers. Whether this will
+cause the same amount of ``data_received`` calls to the protocol as if
+it was never paused is implementation-specific and not guaranteed.
 
 A transport can also be closed, half-closed and aborted. A closed
 transport will finish writing all of the data queued in it to the
