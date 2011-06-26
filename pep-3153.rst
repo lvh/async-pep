@@ -158,8 +158,8 @@ being able to reuse protocols across different transports.
 Consider a simple RPC protocol. The same bytes may be transferred
 across many different transports, for example pipes or sockets. To
 help with this, we separate the protocol out from the transport. The
-protocol just reads and writes bytes, and doesn't really care what
-mechanism is used to eventually transfer those bytes.
+protocol just makes sense of specific bytes, and doesn't really care
+what mechanism is used to eventually transfer bytes.
 
 This also allows for protocols to be stacked or nested easily,
 allowing for even more code reuse. A common example of this is
