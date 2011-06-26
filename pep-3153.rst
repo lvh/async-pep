@@ -109,11 +109,12 @@ incoming data.
 Protocols
 ---------
 
-Protocols are probably more familiar to new users. The terminology is
-consistent with what you would expect from something called a
-protocol: the protocols most people think of first, like HTTP, IRC,
-SMTP... are all examples of something that would be implemented in a
-protocol.
+Protocols are exactly what you'd expect them to be: HTTP, IRC, SMTP...
+are all examples of something that would be implemented in a protocol.
+While they usually have some form of "socket" for a transport, it may
+sometimes be useful to use a separate transport: maybe a file for unit
+testing purposes, maybe a serial port for interfacing with legacy
+systems.
 
 The shortest useful definition of a protocol is a (usually two-way)
 bridge between the transport and the rest of the application logic. A
