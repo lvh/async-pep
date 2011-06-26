@@ -1,4 +1,4 @@
-PEP: XXX
+PEP: 3153
 Title: Asynchronous IO support
 Version: $Revision$
 Last-Modified: $Date$
@@ -92,9 +92,11 @@ advantage of specific capabilities in some transport
 mechanisms. Specifically, this allows transports to use writev_
 instead of write_ or send_, also known as scatter/gather IO.
 
-A transport can be paused and resumed. This will cause it to buffer
-data coming from protocols and stop sending received data to the
-protocol.
+A transport can be paused and resumed. A paused transport buffers all
+input and output it gets, rather than sending them to their proper
+places. When resumed, it will flush the buffers. Whether this will
+cause the same amount of ``data_received`` calls to the protocol as if
+it was never paused is implementation-specific and not guaranteed.
 
 A transport can also be closed, half-closed and aborted. A closed
 transport will finish writing all of the data queued in it to the
@@ -109,11 +111,12 @@ incoming data.
 Protocols
 ---------
 
-Protocols are probably more familiar to new users. The terminology is
-consistent with what you would expect from something called a
-protocol: the protocols most people think of first, like HTTP, IRC,
-SMTP... are all examples of something that would be implemented in a
-protocol.
+Protocols are exactly what you'd expect them to be: HTTP, IRC, SMTP...
+are all examples of something that would be implemented in a protocol.
+While they usually have some form of "socket" for a transport, it may
+sometimes be useful to use a separate transport: maybe a file for unit
+testing purposes, maybe a serial port for interfacing with legacy
+systems.
 
 The shortest useful definition of a protocol is a (usually two-way)
 bridge between the transport and the rest of the application logic. A
@@ -122,6 +125,17 @@ information into some behavior, typically resulting in some method
 calls on an object. Similarly, application logic calls some methods on
 the protocol, which the protocol translates into bytes and
 communicates to the transport.
+
+If a protocol wants to send data to the other side, it will call
+``write`` on its transport. Nice and simple.
+
+When a transport receives data, it calls the ``data_received`` method
+on the protocol. The protocol cannot request new data, it has to wait
+until it has new data. In practice, this means that applications
+cannot read from a socket and then process the data: they always have
+to process the data as it comes in. While this may add complexity to
+protocol implementations, the benefits of asynchronous IO often
+outweigh it.
 
 One of the simplest protocols is a line-based protocol, where data is
 delimited by ``\r\n``. The protocol will receive bytes from the
@@ -158,8 +172,8 @@ being able to reuse protocols across different transports.
 Consider a simple RPC protocol. The same bytes may be transferred
 across many different transports, for example pipes or sockets. To
 help with this, we separate the protocol out from the transport. The
-protocol just reads and writes bytes, and doesn't really care what
-mechanism is used to eventually transfer those bytes.
+protocol just makes sense of specific bytes, and doesn't really care
+what mechanism is used to eventually transfer bytes.
 
 This also allows for protocols to be stacked or nested easily,
 allowing for even more code reuse. A common example of this is
