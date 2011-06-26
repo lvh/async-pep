@@ -124,6 +124,17 @@ calls on an object. Similarly, application logic calls some methods on
 the protocol, which the protocol translates into bytes and
 communicates to the transport.
 
+If a protocol wants to send data to the other side, it will call
+``write`` on its transport. Nice and simple.
+
+When a transport receives data, it calls the ``data_received`` method
+on the protocol. The protocol cannot request new data, it has to wait
+until it has new data. In practice, this means that applications
+cannot read from a socket and then process the data: they always have
+to process the data as it comes in. While this may add complexity to
+protocol implementations, the benefits of asynchronous IO often
+outweigh it.
+
 One of the simplest protocols is a line-based protocol, where data is
 delimited by ``\r\n``. The protocol will receive bytes from the
 transport and buffer them until there is at least one complete
