@@ -15,7 +15,7 @@ Abstract
 This PEP describes an abstraction of asynchronous IO for the Python
 standard library.
 
-The goal is to reach a abstraction that can be implemented by many
+The goal is to reach an abstraction that can be implemented by many
 different asynchronous IO backends and provides a target for library
 developers to write code portable between those different backends.
 
@@ -249,7 +249,7 @@ there appear to be a few problems with this.
 First of all, there is a conceptual problem. A generator, in a sense,
 is "passive". It needs to be told, through a method call, to take
 action. A producer is "active": it initiates those method calls. A
-real producer has a symmetric relationship with it's consumer. In the
+real producer has a symmetric relationship with its consumer. In the
 case of a generator-turned-producer, only the consumer would have a
 reference, and the producer is blissfully unaware of the consumer's
 existence.
@@ -273,7 +273,7 @@ taken care of, since the entire operation is not allowed to
 block. However, generators can not raise an exception on iteration
 without terminating, thereby losing the state of the generator. As a
 result, signaling a lack of available data would have to be done using
-a sentinel value, instead of being done using th exception mechanism.
+a sentinel value, instead of being done using the exception mechanism.
 
 Last but not least, nobody produced actually working code
 demonstrating how they could be used.
