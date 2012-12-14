@@ -3,19 +3,6 @@ The interfaces for implementing asynchronous IO.
 """
 import abc
 
-class FlowControl(metaclass=abc.ABCMeta):
-    @abstractmethod
-    def pause(self):
-        """
-        Pause sending data.
-        """
-
-    @abstractmethod
-    def resume(self): 
-        """
-        Resume sending data sending data.
-        """
-
 class Protocol(metaclass=abc.ABCMeta):
     @abstractmethod
     def connected(self, transport):
@@ -30,7 +17,7 @@ class Protocol(metaclass=abc.ABCMeta):
         """
 
     @abstractmethod
-    def connection_closed(self, reason):
+    def disconnected(self, reason):
         """
         Called when the connection is closed.
         """
