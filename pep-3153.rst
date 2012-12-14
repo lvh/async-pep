@@ -12,54 +12,32 @@ Post-History: TBD
 Abstract
 ========
 
-This PEP describes an abstraction of asynchronous IO for the Python
+This PEP describes protocol and transport abstraction for the Python
 standard library.
 
 The goal is to reach an abstraction that can be implemented by many
-different asynchronous IO backends and provides a target for library
-developers to write code portable between those different backends.
+different IO backends, both synchronous and asynchrous, and provides a
+target for library developers to write code portable between those
+different backends.
 
 Rationale
 =========
 
-People who want to write asynchronous code in Python right now have a
-few options:
+The current state of the art for asynchronous IO libraries lies
+squarely outside the Python standard library. While each of these
+libraries has their own merit, there is a lack of portability between
+them, resulting in a lot of duplicated effort.
 
- - ``asyncore`` and ``asynchat``
- - something bespoke, most likely based on the ``select`` module
- - using a third party library, such as Twisted_ or gevent_
-
-Unfortunately, each of these options has its downsides, which this PEP
-tries to address.
-
-Despite having been part of the Python standard library for a long time,
-the asyncore module suffers from fundamental flaws following from
-an inflexible API that does not stand up to the expectations of
-a modern asynchronous networking module.
-
-Moreover, its approach is too simplistic to provide developers with all
-the tools they need in order to fully exploit the potential of asynchronous
-networking.
-
-The most popular solution right now used in production involves the
-use of third party libraries. These often provide satisfactory
-solutions, but there is a lack of compatibility between these
-libraries, which tends to make codebases very tightly coupled to the
-library they use.
-
-This current lack of portability between different asynchronous IO
-libraries causes a lot of duplicated effort for third party library
-developers. A sufficiently powerful abstraction could mean that
-asynchronous code gets written once, but used everywhere.
+The immediate goal is to specify a protocol abstraction, with some
+basic tools for creating real protocols. This will hopefully become a
+widely supported standard, so that many different libraries with very
+different internals can use the same protocol implementations.
 
 An eventual added goal would be for standard library implementations
 of wire and network protocols to evolve towards being real protocol
 implementations, as opposed to standalone libraries that do everything
 including calling ``recv()`` blockingly. This means they could be
 easily reused for both synchronous and asynchronous code.
-
-.. _Twisted: http://www.twistedmatrix.com/
-.. _gevent: http://www.gevent.org/
 
 Communication abstractions
 ==========================
@@ -127,15 +105,16 @@ the protocol, which the protocol translates into bytes and
 communicates to the transport.
 
 If a protocol wants to send data to the other side, it will call
-``write`` on its transport. Nice and simple.
+``write`` on its transport attribute.
 
 When a transport receives data, it calls the ``data_received`` method
 on the protocol. The protocol cannot request new data, it has to wait
 until it has new data. In practice, this means that applications
 cannot read from a socket and then process the data: they always have
-to process the data as it comes in. While this may add complexity to
-protocol implementations, the benefits of asynchronous IO often
-outweigh it.
+to process the data as it comes in.
+
+Composability example: line-based protocols
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One of the simplest protocols is a line-based protocol, where data is
 delimited by ``\r\n``. The protocol will receive bytes from the
@@ -190,94 +169,6 @@ somewhat like this:
 4. JSON-RPC protocol
 5. Application code
 
-Flow control
-============
-
-Consumers
----------
-
-Consumers consume bytes produced by producers. Together with
-producers, they make flow control possible.
-
-Consumers primarily play a passive role in flow control. They get
-called whenever a producer has some data available. They then process
-that data, and typically yield control back to the producer.
-
-Consumers typically implement buffers of some sort. They make flow
-control possible by telling their producer about the current status of
-those buffers. A consumer can instruct a producer to stop producing
-entirely, stop producing temporarily, or resume producing if it has
-been told to pause previously.
-
-Producers are registered to the consumer using the ``register``
-method.
-
-Producers
----------
-
-Where consumers consume bytes, producers produce them.
-
-Producers are modeled after the IPushProducer_ interface found in
-Twisted. Although there is an IPullProducer_ as well, it is on the
-whole far less interesting and therefore probably out of the scope of
-this PEP.
-
-Although producers can be told to stop producing entirely, the two
-most interesting methods they have are ``pause`` and ``resume``. These
-are usually called by the consumer, to signify whether it is ready to
-process ("consume") more data or not. Consumers and producers
-cooperate to make flow control possible.
-
-In addition to the Twisted IPushProducer_ interface, producers have a
-``half_register`` method which is called with the consumer when the
-consumer tries to register that producer. In most cases, this will
-just be a case of setting ``self.consumer = consumer``, but some
-producers may require more complex preconditions or behavior when a
-consumer is registered. End-users are not supposed to call this method
-directly.
-
-===========================
-Considered API alternatives
-===========================
-
-Generators as producers
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Generators have been suggested as way to implement producers. However,
-there appear to be a few problems with this.
-
-First of all, there is a conceptual problem. A generator, in a sense,
-is "passive". It needs to be told, through a method call, to take
-action. A producer is "active": it initiates those method calls. A
-real producer has a symmetric relationship with its consumer. In the
-case of a generator-turned-producer, only the consumer would have a
-reference, and the producer is blissfully unaware of the consumer's
-existence.
-
-This conceptual problem translates into a few technical issues as
-well. After a successful ``write`` method call on its consumer, a
-(push) producer is free to take action once more. In the case of a
-generator, it would need to be told, either by asking for the next
-object through the iteration protocol (a process which could block
-indefinitely), or perhaps by throwing some kind of signal exception
-into it.
-
-This signaling setup may provide a technically feasible solution, but
-it is still unsatisfactory. For one, this introduces unwarranted
-complexity in the consumer, which now not only needs to understand how
-to receive and process data, but also how to ask for new data and deal
-with the case of no new data being available.
-
-This latter edge case is particularly problematic. It needs to be
-taken care of, since the entire operation is not allowed to
-block. However, generators can not raise an exception on iteration
-without terminating, thereby losing the state of the generator. As a
-result, signaling a lack of available data would have to be done using
-a sentinel value, instead of being done using the exception mechanism.
-
-Last but not least, nobody produced actually working code
-demonstrating how they could be used.
-
 References
 ==========
 
@@ -287,9 +178,6 @@ References
 .. _writev: http://pubs.opengroup.org/onlinepubs/009695399/functions/writev.html
 .. _write: http://pubs.opengroup.org/onlinepubs/009695399/functions/write.html
 .. _send: http://pubs.opengroup.org/onlinepubs/009695399/functions/send.html
-.. _IPushProducer: http://twistedmatrix.com/documents/current/api/twisted.internet.interfaces.IPushProducer.html
-.. _IPullProducer: http://twistedmatrix.com/documents/current/api/twisted.internet.interfaces.IPullProducer.html
-
 
 Copyright
 =========
