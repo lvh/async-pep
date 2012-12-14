@@ -4,26 +4,26 @@ The interfaces for implementing asynchronous IO.
 import abc
 
 class Protocol(metaclass=abc.ABCMeta):
-    @abstractmethod
     def connected(self, transport):
         """
         Called when the connection is established.
         """
+        self.transport = transport
 
-    @abstractmethod
+    @abc.abstractmethod
     def data_received(self, data):
         """
         Called when some data is received.
         """
 
-    @abstractmethod
     def disconnected(self, reason):
         """
         Called when the connection is closed.
         """
+        self.transport = None
 
-class Transport(FlowControl):
-    @abstractmethod
+class Transport(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
     def write(self, data):
         """
         Write some data into the transport.
@@ -31,7 +31,7 @@ class Transport(FlowControl):
         The data must be buffer of bytes.
         """
 
-    @abstractmethod
+    @abc.abstractmethod
     def write_sequence(self, sequence):
         """
         Write a sequence of data.
@@ -39,19 +39,19 @@ class Transport(FlowControl):
         The sequence must be a sequence of buffers of bytes.
         """
 
-    @abstractmethod
+    @abc.abstractmethod
     def close(self):
         """
         Close the connection after sending queued data.
         """
 
-    @abstractmethod
+    @abc.abstractmethod
     def abort(self):
         """
         Immediately close the connection without sending queued data.
         """
 
-    @abstractmethod
+    @abc.abstractmethod 
     def half_close(self):
         """
         Close the connection after sending queued data.
